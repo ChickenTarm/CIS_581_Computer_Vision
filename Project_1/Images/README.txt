@@ -1,0 +1,3 @@
+The findDerivative uses a Gaussian and Sobel operator.
+The NMS is standard
+The edge link has a threshold that is decided based on the percentile of the Magnitudes of the image edges. If at the 70th percentile the threshold is too high then after all the conditionals placed on the threshold you can override the result with a different percentile of your choice. The high threshold is also decided based on what the low threshold is.

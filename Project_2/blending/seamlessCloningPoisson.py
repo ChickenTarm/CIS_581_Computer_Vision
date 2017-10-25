@@ -11,43 +11,45 @@ from reconstructImg import reconstructImg
 import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
+from scipy import misc
+from scipy import sparse
 
 def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
-	targetH, targetW, _ = targetImg.shape
+    targetH, targetW, _ = targetImg.shape
 
-	indexes = getIndexes(mask, targetH, targetW, offsetX, offsetY)
+    indexes = getIndexes(mask, targetH, targetW, offsetX, offsetY)
 
-	coeffA = getCoefficientMatrix(indexes)
+    coeffA = getCoefficientMatrix(indexes)
 
-	src_red = sourceImg[:, :, 0]
-	src_blue = sourceImg[:, :, 1]
-	src_green = sourceImg[:, :, 2]
+    src_red = sourceImg[:, :, 0]
+    src_green = sourceImg[:, :, 1]
+    src_blue = sourceImg[:, :, 2]
 
-	tgt_red = targetImg[:, :, 0]
-	tgt_blue = targetImg[:, :, 1]
-	tgt_green = targetImg[:, :, 2]
+    tgt_red = targetImg[:, :, 0]
+    tgt_green = targetImg[:, :, 1]
+    tgt_blue = targetImg[:, :, 2]
 
-	red_sol = getSolutionVect(indexes, src_red, tgt_red, offsetX, offsetY)
-	blue_sol = getSolutionVect(indexes, src_blue, tgt_blue, offsetX, offsetY)
-	green_sol = getSolutionVect(indexes, src_green, tgt_green, offsetX, offsetY)
+    red_sol = getSolutionVect(indexes, src_red, tgt_red, offsetX, offsetY)
+    green_sol = getSolutionVect(indexes, src_green, tgt_green, offsetX, offsetY)
+    blue_sol = getSolutionVect(indexes, src_blue, tgt_blue, offsetX, offsetY)
 
-	print "Start inversion"
+    print red_sol.shape
 
-	solution = np.linalg.inv(coeffA)
+    red = sparse.linalg.spsolve(coeffA, red_sol.T)
+    green = sparse.linalg.spsolve(coeffA, green_sol.T)
+    blue = sparse.linalg.spsolve(coeffA, blue_sol.T)
 
-	print "inversion done"
+    red = np.ndarray.astype(red , dtype=int)
+    green = np.ndarray.astype(green, dtype=int)
+    blue = np.ndarray.astype(blue, dtype=int)
 
-	print solution
+    np.set_printoptions(threshold='nan')
 
-	red = np.dot(solution, red_sol)
-	blue = np.dot(solution, blue_sol)
-	green = np.dot(solution, green_sol)
+    resultImg = reconstructImg(indexes, red, green, blue, targetImg)
 
-	resultImg = reconstructImg(indexes, red, green, blue, targetImg)
+    plt.imshow(resultImg)
+    plt.show()
 
-	plt.imshow(resultImg)
-	plt.show()
+    misc.imsave("result.png", resultImg)
 
-	return resultImg
-
-seamlessCloningPoisson(np.asarray(Image.open("face.jpg")), np.asarray(Image.open("couple.jpg")), np.asarray(Image.open("mask.jpg")), 544, 116)
+    return resultImg

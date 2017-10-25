@@ -41,23 +41,20 @@ def click_correspondences(im1, im2):
   img1pts = pts[0::2]
   img2pts = pts[1::2]
 
-  y1Max, x1Max, depth1 = im1.shape
   y2Max, x2Max, depth2 = im2.shape
 
   img1pts = np.append(img1pts,
-    [(0, 0), (0, y1Max / 4), (0, y1Max / 2), (0, 3 * y1Max / 4), (0, y1Max),
-     (x1Max / 4, y1Max), (x1Max / 2, y1Max), (3 * x1Max / 4, y1Max), (x1Max, y1Max),
-     (x1Max, 3 * y1Max / 4), (x1Max, y1Max / 2), (x1Max, y1Max / 4), (x1Max, 0),
-     (3 * x1Max / 4, 0), (x1Max / 2, 0), (x1Max / 4, 0)], axis=0)
+    [(0, 0), (0, y2Max / 4.0), (0, y2Max / 2.0), (0, 3.0 * y2Max / 4.0), (0, y2Max),
+     (x2Max / 4.0, y2Max), (x2Max / 2.0, y2Max), (3 * x2Max / 4.0, y2Max), (x2Max, y2Max),
+     (x2Max, 3.0 * y2Max / 4.0), (x2Max, y2Max / 2.0), (x2Max, y2Max / 4.0), (x2Max, 0),
+     (3.0 * x2Max / 4.0, 0), (x2Max / 2.0, 0), (x2Max / 4.0, 0)], axis=0)
   img2pts = np.append(img2pts,
-    [(0, 0), (0, y2Max / 4), (0, y2Max / 2), (0, 3 * y2Max / 4), (0, y2Max),
-     (x2Max / 4, y2Max), (x2Max / 2, y2Max), (3 * x2Max / 4, y2Max), (x2Max, y2Max),
-     (x2Max, 3 * y2Max / 4), (x2Max, y2Max / 2), (x2Max, y2Max / 4), (x2Max, 0),
-     (3 * x2Max / 4, 0), (x2Max / 2, 0), (x2Max / 4, 0)], axis=0)
+    [(0, 0), (0, y2Max / 4.0), (0, y2Max / 2.0), (0, 3.0 * y2Max / 4.0), (0, y2Max),
+     (x2Max / 4.0, y2Max), (x2Max / 2.0, y2Max), (3.0 * x2Max / 4.0, y2Max), (x2Max, y2Max),
+     (x2Max, 3.0 * y2Max / 4.0), (x2Max, y2Max / 2.0), (x2Max, y2Max / 4.0), (x2Max, 0),
+     (3 * x2Max / 4.0, 0), (x2Max / 2.0, 0), (x2Max / 4.0, 0)], axis=0)
 
   np.savetxt("im1pts.csv",img1pts)
   np.savetxt("im2pts.csv", img2pts)
   
   return img1pts, img2pts
-
-# click_correspondences(np.asarray(Image.open("kb_interview.jpg")), np.asarray(Image.open("kb_vm.jpg")))

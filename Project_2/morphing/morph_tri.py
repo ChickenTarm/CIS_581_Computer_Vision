@@ -20,17 +20,12 @@
 
 from scipy.spatial import Delaunay
 import numpy as np
+from matplotlib import pyplot as plt
 from PIL import Image
 from scipy import misc
 
-def getColor(img1, img2):
-  return
-
 
 def morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolve_frac):
-  # TODO: Your code here
-  # Tips: use Delaunay() function to get Delaunay triangulation;
-  # Tips: use tri.find_simplex(pts) to find the triangulation index that pts locates in.
 
   yMax, xMax, depth = im2.shape
 
@@ -48,7 +43,7 @@ def morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolve_frac):
   images = []
 
   for i in range(0, frames):
-    print ("frame: " + str(i))
+    print "frame: " + str(i)
     warp = warp_frac[i]
     int_pts = (1 - warp) * im1_pts + warp * im2_pts
     int_tri = Delaunay(int_pts)
@@ -56,44 +51,62 @@ def morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolve_frac):
 
     tri_mat = []
     for t in tri.simplices:
-      p1 = int_pts[[t[0]]]
-      p2 = int_pts[[t[1]]]
-      p3 = int_pts[[t[2]]]
-      A = np.matrix([[p1[0][0], p2[0][0], p3[0][0]], [p1[0][1], p2[0][1], p3[0][1]], [1, 1, 1]])
-      tri_mat.append(A.I)
+      p1 = int_tri.points[t[0]]
+      p2 = int_tri.points[t[1]]
+      p3 = int_tri.points[t[2]]
+      A = np.matrix([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])
+      tri_mat.append((A, A.I))
 
     int_img = im2.copy()
 
-    print "start dissolve"
+    print "start dissolving"
 
     for y in range(0, yMax):
       for x in range(0, xMax):
-        inTri = tri.find_simplex([x, y])
-        bary = np.dot(tri_mat[inTri], [[x], [y], [1]])
+        inTri = Delaunay.find_simplex(int_tri, np.array([x,y]), bruteforce=True)
+        bary = np.dot(tri_mat[inTri][1], [[x], [y], [1]])
 
         t1 = img1_tri.simplices[inTri]
-        p11 = im1_pts[[t1[0]]]
-        p12 = im1_pts[[t1[1]]]
-        p13 = im1_pts[[t1[2]]]
-        t1_mat = np.matrix([[p11[0][0], p12[0][0], p13[0][0]], [p11[0][1], p12[0][1], p13[0][1]], [1, 1, 1]])
+        p11 = img1_tri.points[t1[0]]
+        p12 = img1_tri.points[t1[1]]
+        p13 = img1_tri.points[t1[2]]
+        t1_mat = np.matrix([[p11[0], p12[0], p13[0]], [p11[1], p12[1], p13[1]], [1, 1, 1]])
 
         t2 = img2_tri.simplices[inTri]
-        p21 = im2_pts[[t2[0]]]
-        p22 = im2_pts[[t2[1]]]
-        p23 = im2_pts[[t2[2]]]
-        t2_mat = np.matrix([[p21[0][0], p22[0][0], p23[0][0]], [p21[0][1], p22[0][1], p23[0][1]], [1, 1, 1]])
+        p21 = img2_tri.points[t2[0]]
+        p22 = img2_tri.points[t2[1]]
+        p23 = img2_tri.points[t2[2]]
+        t2_mat = np.matrix([[p21[0], p22[0], p23[0]], [p21[1], p22[1], p23[1]], [1, 1, 1]])
 
         coord1 = np.dot(t1_mat, bary)
         coord2 = np.dot(t2_mat, bary)
 
-        x1 = min(int(round(coord1[0])), xMax - 1)
-        y1 = min(int(round(coord1[1])), yMax - 1)
+        x1 = int(coord1[0])
+        y1 = int(coord1[1])
 
-        x2 = min(int(round(coord2[0])), xMax - 1)
-        y2 = min(int(round(coord2[1])), yMax - 1)
+        x2 = int(coord2[0])
+        y2 = int(coord2[1])
 
-        c1 = im1[y1][x1]
-        c2 = im2[y2][x2]
+        try:
+          c1 = im1[y1][x1]
+          c2 = im2[y2][x2]
+        except:
+          print "x,y: " + str((x, y))
+          print "tri_mat: " + str(tri_mat[inTri])
+          print "bary: " + str(bary)
+          print "t1_mat: " + str(t1_mat)
+          print "t2_mat: " + str(t2_mat)
+          print "coord1: " + str(coord1)
+          print "coord2: " + str(coord2)
+          print "inTri: " + str(inTri)
+          print "p11: " + str(p11)
+          print "p12: " + str(p12)
+          print "p13: " + str(p13)
+          print "p21: " + str(p21)
+          print "p22: " + str(p22)
+          print "p23: " + str(p23)
+          print "t1: " + str(t1)
+          print "t2: " + str(t2)
 
         dis = dissolve_frac[i]
 
@@ -103,11 +116,7 @@ def morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolve_frac):
         int_img[y][x] = int_c
 
     images.append(int_img)
-    misc.imsave("frame_" + str(i) + ".png", int_img)
 
-  return np.asarray(images)
+  images = np.array(images)
 
-# warp = np.array(range(0, 61), dtype=float)
-# warp = warp / (len(warp) - 1)
-#
-# morph_tri(np.asarray(Image.open("kb_interview.jpg")), np.asarray(Image.open("kb_vm.jpg")), np.loadtxt("kb1pts.csv"), np.loadtxt("kb2pts.csv"), warp, warp)
+  return images

@@ -1,0 +1,25 @@
+Face Detector Coordinates in List: 
+0. Top Left 
+1. Top Right 
+2. Bottom Right 
+3. Bottom Left 
+4. Top Left - Left Eye
+5. Top Right - Left Eye
+6. Bottom Right - Left Eye 
+7. Bottom Left - Left Eye 
+8. Top Left - Right Eye
+9. Top Right - Right Eye
+10. Bottom Right - Right Eye 
+11. Bottom Left - Right Eye 
+
+
+Index Values for Masks
+0. Dog Left Ear 
+1. Dog Right Ear 
+2. Dog Nose 
+3. Cat Left Ear 
+4. Cat Right Ear 
+5. Cat Nose 
+6. Left Eye 
+7. Right Eye 
+8. Joker Nose

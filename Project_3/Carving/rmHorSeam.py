@@ -18,20 +18,14 @@ def rmHorSeam(I, My, Tby):
 
   colDict = {}
 
-  print "bestIndexHor: " + str(bestIndex)
-
   y = bestIndex
   x = xMax - 1
 
   E = My[y][x]
 
-  # print "E: " + str(E)
-  # print My[26][999]
-
   colDict[x] = y
 
   while x > 0:
-    # print (y, x)
     change = Tby[y][x]
     y = y + change
     x = x - 1
@@ -39,7 +33,6 @@ def rmHorSeam(I, My, Tby):
 
   for i in range(0, xMax):
     yIgn = colDict[i]
-    # print "yIgn: " + str(yIgn)
     Iy[0 : yIgn, i, :] = I[0 : yIgn, i, :]
     Iy[yIgn : yMax - 1, i, :] = I[min(yIgn + 1, yMax - 1) : yMax, i, :]
 

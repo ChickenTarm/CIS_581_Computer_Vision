@@ -6,7 +6,6 @@
 
 import numpy as np
 
-
 def rmVerSeam(I, Mx, Tbx):
 
   yMax, xMax = Mx.shape
@@ -18,8 +17,6 @@ def rmVerSeam(I, Mx, Tbx):
   bestIndex = np.argmin(bottom)
 
   rowDict = {}
-
-  print "bestIndexVert: " + str(bestIndex)
 
   y = yMax - 1
   x = bestIndex
@@ -36,7 +33,6 @@ def rmVerSeam(I, Mx, Tbx):
 
   for i in range(0, yMax):
     xIgn = rowDict[i]
-    # print "xIgn: " + str(xIgn)
     Ix[i, 0 : xIgn, :] = I[i, 0 : xIgn, :]
     Ix[i, xIgn : xMax-1, :] = I[i, min(xIgn + 1, xMax - 1): xMax, :]
 

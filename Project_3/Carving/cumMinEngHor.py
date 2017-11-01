@@ -17,11 +17,11 @@ def cumMinEngHor(e):
   for x in range(1, xMax):
     for y in range(0, yMax):
       if y == 0:
-         parents = [float("inf"), e[y][x - 1], e[y + 1][x - 1]]
+         parents = [float("inf"), My[y][x - 1], My[y + 1][x - 1]]
       elif y == yMax - 1:
-        parents = [e[y - 1][x - 1], e[y][x - 1], float("inf")]
+        parents = [My[y - 1][x - 1], My[y][x - 1], float("inf")]
       else:
-        parents = [e[y - 1][x - 1], e[y][x - 1], e[y + 1][x - 1]]
+        parents = [My[y - 1][x - 1], My[y][x - 1], My[y + 1][x - 1]]
 
       cheap = parents.index(min(parents))
 

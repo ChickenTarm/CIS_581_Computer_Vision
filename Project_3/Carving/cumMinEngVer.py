@@ -17,11 +17,11 @@ def cumMinEngVer(e):
   for y in range(1,yMax):
     for x in range(0,xMax):
       if x == 0:
-         parents = [float("inf"), e[y - 1][x], e[y - 1][x + 1]]
+         parents = [float("inf"), Mx[y - 1][x], Mx[y - 1][x + 1]]
       elif x == xMax - 1:
-        parents = [e[y - 1][x - 1], e[y - 1][x], float("inf")]
+        parents = [Mx[y - 1][x - 1], Mx[y - 1][x], float("inf")]
       else:
-        parents = [e[y - 1][x - 1], e[y - 1][x], e[y - 1][x + 1]]
+        parents = [Mx[y - 1][x - 1], Mx[y - 1][x], Mx[y - 1][x + 1]]
 
       cheap = parents.index(min(parents))
 

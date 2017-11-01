@@ -53,3 +53,5 @@ def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
     misc.imsave("result.png", resultImg)
 
     return resultImg
+
+seamlessCloningPoisson(np.asarray(Image.open("SC_Dog_Nose.png")), np.asarray(Image.open("couple_l.jpg")), np.asarray(Image.open("mask.png")), 30, 40)

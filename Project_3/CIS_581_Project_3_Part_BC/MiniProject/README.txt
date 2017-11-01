@@ -1,0 +1,3 @@
+This program performs a filtering by blending object unto the face like Snapchat filters.
+This can be run from the terminal assuming that openCV is installed. The terminal command looks like this: python FilterImage.py (Image to filter) (Filter number which corresponds to which filter is applied)
+The result will be placed in The folder Results. The blending takes a little bit of time to happen for some of the larger filters such as the dog one

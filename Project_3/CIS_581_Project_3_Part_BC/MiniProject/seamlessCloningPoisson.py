@@ -9,9 +9,6 @@ from getCoefficientMatrix import getCoefficientMatrix
 from getSolutionVect import getSolutionVect
 from reconstructImg import reconstructImg
 import numpy as np
-from PIL import Image
-from matplotlib import pyplot as plt
-from scipy import misc
 from scipy import sparse
 
 def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
@@ -33,8 +30,6 @@ def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
     green_sol = getSolutionVect(indexes, src_green, tgt_green, offsetX, offsetY)
     blue_sol = getSolutionVect(indexes, src_blue, tgt_blue, offsetX, offsetY)
 
-    print red_sol.shape
-
     red = sparse.linalg.spsolve(coeffA, red_sol.T)
     green = sparse.linalg.spsolve(coeffA, green_sol.T)
     blue = sparse.linalg.spsolve(coeffA, blue_sol.T)
@@ -46,8 +41,5 @@ def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
     np.set_printoptions(threshold='nan')
 
     resultImg = reconstructImg(indexes, red, green, blue, targetImg)
-
-    # plt.imshow(resultImg)
-    # plt.show()
 
     return resultImg

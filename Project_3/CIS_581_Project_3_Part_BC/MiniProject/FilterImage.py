@@ -47,12 +47,12 @@ def testBoxes(b):
         return True
 
 
+# This program can be run from the terminal using python FilterImage.py -Image to filter- -number specifying filter-
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("target", type=str, help="The target image that will get all of the filters")
-    parser.add_argument("filter", type=int, help="enter 1 for dog, 2 for cat, 3 for eyes, 4 for joker, 5 for anime eyes")
-
-
+    parser.add_argument("target", type=str, help="The target image that will get the filter")
+    parser.add_argument("filter", type=int, help="enter 1 for dog, 2 for cat, 3 for eyes, 4 for anime eyes")
 
     args = parser.parse_args()
 
@@ -63,8 +63,6 @@ def main():
     boxes = getFeatCoor(target_img)
 
     filter = args.filter
-
-    print boxes
 
     filter_list = []
 
@@ -79,31 +77,16 @@ def main():
     elif filter == 3:
         filter_list.append((6, cv2.imread("Masks/Left_Eye_Mask.png")[:,:,0], cv2.imread("Masks/Left_Eye.png")))
         filter_list.append((7, cv2.imread("Masks/Right_Eye_Mask.png")[:,:,0], cv2.imread("Masks/Right_Eye.png")))
-    elif filter == 4:
-        filter_list.append((8, cv2.imread("Masks/Joker_Nose_Mask.png")[:,:,0], cv2.imread("Masks/Joker_Nose.png")))
     else:
         filter_list.append((6, cv2.imread("Masks/Orange_Left_Eye_Mask.png")[:,:,0], cv2.imread("Masks/Orange_Left_Eye.png")))
         filter_list.append((7, cv2.imread("Masks/Orange_Right_Eye_Mask.png")[:, :, 0], cv2.imread("Masks/Orange_Right_Eye.png")))
 
     if testBoxes(boxes):
-        cv2.imshow('img', target_img)
-        cv2.imshow('img_pure', target_img_p)
-        cv2.imwrite(args.target[:-4] + "_boxes" + args.target[-4:], target_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
 
         temp_Img = target_img_p
         for filt in filter_list:
             filt_offx, filt_offy = getOffsets(boxes, filt[1], filt[0])
-            print (filt_offx, filt_offy)
             temp_Img = seamlessCloningPoisson(filt[2], temp_Img, filt[1], filt_offx, filt_offy)
-            cv2.imshow('img_filtered', temp_Img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-
-        cv2.imshow('img_filtered', temp_Img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
 
         name = args.target.split("/")[1]
 
@@ -113,8 +96,6 @@ def main():
             cv2.imwrite("Results/" + name[:-4] + "_Cat" + name[-4:], temp_Img)
         elif filter == 3:
             cv2.imwrite("Results/" + name[:-4] + "_Eyes" + name[-4:], temp_Img)
-        elif filter == 4:
-            cv2.imwrite("Results/" + name[:-4] + "_Joker" + name[-4:], temp_Img)
         else:
             cv2.imwrite("Results/" + name[:-4] + "_Anime" + name[-4:], temp_Img)
         return

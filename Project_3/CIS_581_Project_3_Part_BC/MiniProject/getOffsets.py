@@ -69,8 +69,6 @@ def getOffsets(boxes, mask, maskIndex):
         xOffset = faceCenterX - maskCenterX;
         yOffset = faceCenterY;
 
-    print xOffset
-    print yOffset
     if (xOffset < 0):
         xOffset = 1;
     if (yOffset < 0):

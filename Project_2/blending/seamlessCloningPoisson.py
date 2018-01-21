@@ -33,7 +33,7 @@ def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
     green_sol = getSolutionVect(indexes, src_green, tgt_green, offsetX, offsetY)
     blue_sol = getSolutionVect(indexes, src_blue, tgt_blue, offsetX, offsetY)
 
-    print red_sol.shape
+    # print red_sol.shape
 
     red = sparse.linalg.spsolve(coeffA, red_sol.T)
     green = sparse.linalg.spsolve(coeffA, green_sol.T)
@@ -54,4 +54,4 @@ def seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY):
 
     return resultImg
 
-seamlessCloningPoisson(np.asarray(Image.open("SC_Dog_Nose.png")), np.asarray(Image.open("couple_l.jpg")), np.asarray(Image.open("mask.png")), 30, 40)
+seamlessCloningPoisson(np.asarray(Image.open("SourceImage.jpg")), np.asarray(Image.open("TargetImage.jpg")), np.asarray(Image.open("minion_mask.png")), 180, 200)

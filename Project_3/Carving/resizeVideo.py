@@ -181,8 +181,8 @@ def mkVid (I, nr, nc):
 
     formatFrames(I, frameImg)
 
-    imageio.mimsave('result.gif', frameImg, format='GIF', duration=1 / 30)
+    imageio.mimsave('result.mp4', frameImg, format='MP4', fps=30)
     scipy.misc.imsave("result.png", final)
 
 
-mkVid(np.asarray(Image.open("soccer.jpeg")), 25, 25)
+mkVid(np.asarray(Image.open("soccer.jpeg")), 10, 10)
